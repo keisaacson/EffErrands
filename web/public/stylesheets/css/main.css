@@ -28,9 +28,9 @@ h1 {
 }
 
  .new {
-  float: right;
+  float: left;
   font-size: 25px;
-  padding: 20px;
+  padding: 22px;
  }
 
 .error {
@@ -45,5 +45,20 @@ h1 {
 .find_route {
   margin:  10px;
 }
+
+
+#walk + label {
+  top: -40px;
+  left: -20px;
+}
+
+#drive + label {
+  right: 40px;
+}
+
+
+
+
+
 
 
