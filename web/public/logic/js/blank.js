@@ -91,8 +91,10 @@
 	// });
 	
 	$($('.accordion_down').next()).hide();
-
+	// var label = true
 	
+	// make boolean value for hiding / showing label "toggle-prompt"
+
 	$(function(){
 		$('.accordion_down').click(function(){
 			$($(this).next()).slideToggle("slow", function(){
