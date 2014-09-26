@@ -1,12 +1,14 @@
 .sidebar {
-  float: right;
+float: right;
+padding-top: 20px;
  margin-top: 26px;
  background-color: #f8a579;
  text-align: center;
+ min-height: 341px;
   /*background: url('') no-repeat;*/
 }
 
-body, h1, p, h4, button, select {
+body, h1, p, h4, h5, button, select {
   font-family: 'Lora', serif;
   opacity: 1;
 }

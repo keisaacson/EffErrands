@@ -3,7 +3,7 @@
 
 				
 				<fieldset>
-					<legend>Errands done efficiently</legend>
+					<legend>Find my efficient route</legend>
 
 
 
@@ -77,6 +77,11 @@
 
 
 		<div class="sidebar large-4 columns">
+			<% if !defined?(start_dest) %>
+        		<h4>Errands made efficient</h4>
+            		<h5><em>Don't waste time running errands.</em></h5>
+            		<p>Whether you're traveling by foot or by car, Eff Errands will help you find the quickest route to get your errands done fast. Now, go forth and conquer! </p>
+            <% end %>
 
 			<% if defined?(start_dest) %>
 			<h4>Start</h4>
@@ -90,7 +95,7 @@
 					<em><%= "#{array.last.split(' ').map(&:capitalize).join(' ')}" %></em></p>
 					<% end %> 
 					<form action="/route" method="post">
-					<label class="input-label" for="end_name">End Location</label>
+					<label class="input-label" for="end_name"><h4>End Location</h4></label>
 							<select class="drop-down" name="end_name">
 								<option value=<%="#{start_dest.first}"%> selected><%="#{start_dest.first.split(' ').map(&:capitalize).join(' ')}"%></option>
 								<% dests.each do |array| %>
