@@ -13,31 +13,23 @@ class EffErrands::Server < Sinatra::Application
     #home page
     @@user_items = []
     @@start_location = []
+    @@end_location = []
+    @@travel_mode = nil
     
     erb :index 
   end
 
   #for index, use this
   post '/add-items' do
-    #sets @error to an empty string, to be ignored if there is no error
-    @error = ''
 
-    #check if start name or start address is empty and has not already been entered
-    if (params['start_name'].nil? || params['start_address'].nil?) && @@start_location == []
-     @error = 'Please add a starting location with name and address.'
-
-    elsif @@start_location == []
+    if @@start_location == []
       @@start_location = [params['start_name'], params['start_address']]
+      @@travel_mode = params['travel_mode'].to_i
     end
 
-     
-    if !params['dest_name'].nil? && !params['dest_address'].nil?
+    if params['dest_name']
       @@user_items << [params['dest_name'], params['dest_address']] 
-
-    elsif params['dest_name'] == '' || params['dest_address'] == ''
-      @error = 'Please add a destination with name and address.'
     end
-    
 
     start_dest = @@start_location
     dests = @@user_items
@@ -50,19 +42,24 @@ class EffErrands::Server < Sinatra::Application
     #@@start_location = ['DevHouse', '1803 E 18th Street, Austin, TX']
     #@@end_location = ['MakerSquare Brazos', '800 Brazos St, Austin, TX']
 
+    if params['end_name'].downcase == @@start_location.first.downcase 
+      @@end_location = @@start_location
+    else
+      @@end_location = @@user_items.find {|x| x.first.downcase == params['end_name'].downcase}
+      @@user_items.delete(@@end_location)
+    end
+
     #create address hash
     @@address = {}
 
     #create array for origins key
-    @@address[:origins] = @@user_items.map {|x| x.last.gsub(/,/, '').gsub(/\s/, '+')}
-    @@address[:origins].unshift(@@start_location.last.gsub(/,/, '').gsub(/\s/, '+'))
+    @@address[:waypoints] = @@user_items.map {|x| x.last.gsub(/,/, '').gsub(/\s/, '+')}
+    @@address[:origin] = @@start_location.last.gsub(/,/, '').gsub(/\s/, '+')
 
     #create array for destinations key
-    @@address[:destinations] = @@user_items.map {|x| x.last.gsub(/,/, '').gsub(/\s/, '+')}
-    @@address[:destinations].push(@@start_location.last.gsub(/,/, '').gsub(/\s/, '+'))  
+    @@address[:destination] = @@end_location.last.gsub(/,/, '').gsub(/\s/, '+')
 
     address = @@address
-    # binding.pry
 
     redirect '/api_request_waypoints'
   end
@@ -108,7 +105,11 @@ class EffErrands::Server < Sinatra::Application
   #data['routes'].first['legs'].first['steps'].first['html_instructions']
   get '/api_request_waypoints' do
     # Make API call to google maps: 
-    new_url = URI.encode('https://maps.googleapis.com/maps/api/directions/json?origin=' + @@address[:origins].first + '&destination=' + @@address[:origins].first + '&waypoints=optimize:true|' + @@address[:origins][1..-1].join("|") + '&key=' + ENV['GOOGLE_MAPS_KEY'].to_s)
+    if @@travel_mode == 0
+      new_url = URI.encode('https://maps.googleapis.com/maps/api/directions/json?origin=' + @@address[:origin] + '&destination=' + @@address[:destination] + '&waypoints=optimize:true|' + @@address[:waypoints].join("|") + '&key=' + ENV['GOOGLE_MAPS_KEY'])
+    else
+      new_url = URI.encode('https://maps.googleapis.com/maps/api/directions/json?origin=' + @@address[:origin] + '&destination=' + @@address[:destination] + '&waypoints=optimize:true|' + @@address[:waypoints].join("|") + '&mode=walking&key=' + ENV['GOOGLE_MAPS_KEY'])
+    end
     ordered_response = Unirest.get (new_url)
     # Put the API response in some sort of order:
     data = ordered_response.body
@@ -136,6 +137,8 @@ class EffErrands::Server < Sinatra::Application
     dests = @@user_items
     addresses = @@address  
     names = []
+    end_dest = @@end_location
+    mode = @@travel_mode
 
     i =0
     while i < dests.length do
@@ -144,8 +147,11 @@ class EffErrands::Server < Sinatra::Application
     end
 
     names.unshift(start_dest.first)
+    names.push(end_dest.first)
 
-    erb :route, :locals => {start_dest: start_dest, points: points_hash, names: names, directions: all_legs}
+    binding.pry
+
+    erb :route, :locals => {start_dest: start_dest, points: points_hash, names: names, directions: all_legs, end_dest: end_dest, mode: mode}
 
   end
 
