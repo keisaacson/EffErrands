@@ -89,16 +89,14 @@
 				<p><strong><%= "#{array.first.split(' ').map(&:capitalize).join(' ')}"%></strong><br />
 					<em><%= "#{array.last.split(' ').map(&:capitalize).join(' ')}" %></em></p>
 					<% end %> 
-					<form>
-					<label class="input-label" for="end_location">End Location</label>
-							<select class="drop-down" name="end_location">
-								<option value=<%="#{start_dest.first.split(' ').map(&:capitalize).join('')}"%> selected><%="#{start_dest.first.split(' ').map(&:capitalize).join(' ')}"%></option>
+					<form action="/route" method="post">
+					<label class="input-label" for="end_name">End Location</label>
+							<select class="drop-down" name="end_name">
+								<option value=<%="#{start_dest.first}"%> selected><%="#{start_dest.first.split(' ').map(&:capitalize).join(' ')}"%></option>
 								<% dests.each do |array| %>
-									<option value=<%= "#{array.first.split(' ').map(&:capitalize).join('')}" %>><%= "#{array.first.split(' ').map(&:capitalize).join(' ')}"%></option>
+									<option value=<%="#{array.first}" %>><%= "#{array.first.split(' ').map(&:capitalize).join(' ')}"%></option>
 								<% end %>
 							</select>
-					</form>
-					<form action="/route" method="post">
 						<button class="find_route">Find my route!</button> 
 					</form>
 					<% end %>
