@@ -2,7 +2,11 @@
 
 <div class="row">
 	<div class="large-6 columns">
-		<h4>Get those errands done!</h4>
+		<% if mode == 1%>
+			<h4>Your walking directions:</h4>
+		<% else %>
+			<h4>Your driving directions:</h4>
+		<% end %>
 		<ul>
 			<% regex = /^(.*)\s\d+,\s\w+$/%>
 			<% points.each do |k, v| %>
@@ -21,7 +25,7 @@
 
 		</ul>
 
-		<p> <%=  'End at ' + start_dest.first.split(' ').map(&:capitalize).join(' ')%> </p>
+		<p> <%=  'End at ' + end_dest.first.split(' ').map(&:capitalize).join(' ')%> </p>
 	</div>
 	<div class="large-6 columns">
 	</div>
