@@ -79,7 +79,7 @@ class EffErrands::Server < Sinatra::Application
     points_hash = {}
     each_stop = []
     all_legs = []
-        address_for_geocoding = []
+    address_for_geocoding = []
 
     # Adds all of the addresses into an array in the order sorted by Google:
     data['routes'].first['legs'].each_index do |i|
@@ -113,14 +113,14 @@ class EffErrands::Server < Sinatra::Application
     names.unshift(start_dest.first)
     names.push(end_dest.first)
     
-
-    ## GEOCODING API FOR THE MAP:
-    address_for_geocoding.each do |x|
-      geo_url = URI.encode('https://maps.googleapis.com/maps/api/geocode/json?address=' + x + '&key=' + ENV['GOOGLE_MAPS_KEY'])
-      response = Unirest.get (geo_url)
-      geo_data = response.body
-      geocodes << geo_data['results'].first['geometry']['location']
-    end
+    # geocodes = []
+    # ## GEOCODING API FOR THE MAP:
+    # address_for_geocoding.each do |x|
+    #   geo_url = URI.encode('https://maps.googleapis.com/maps/api/geocode/json?address=' + x + '&key=' + ENV['GOOGLE_MAPS_KEY'])
+    #   response = Unirest.get (geo_url)
+    #   geo_data = response.body
+    #   geocodes << geo_data['results'].first['geometry']['location']
+    # end
 
     erb :route, :locals => {start_dest: start_dest, points: points_hash, names: names, directions: all_legs, end_dest: end_dest, mode: mode}
 
