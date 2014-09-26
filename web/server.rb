@@ -52,11 +52,9 @@ class EffErrands::Server < Sinatra::Application
     #create address hash
     @@address = {}
 
-    #create array for origins key
     @@address[:waypoints] = @@user_items.map {|x| x.last.gsub(/,/, '').gsub(/\s/, '+')}
     @@address[:origin] = @@start_location.last.gsub(/,/, '').gsub(/\s/, '+')
 
-    #create array for destinations key
     @@address[:destination] = @@end_location.last.gsub(/,/, '').gsub(/\s/, '+')
 
     address = @@address
@@ -75,7 +73,6 @@ class EffErrands::Server < Sinatra::Application
     # Put the API response in some sort of order:
     data = ordered_response.body
 
-    # Creates some containers for the data:
     points_hash = {}
     each_stop = []
     all_legs = []
@@ -89,8 +86,8 @@ class EffErrands::Server < Sinatra::Application
       data['routes'].first['legs'][i]['steps'].each { |x| sub_leg << x['html_instructions']}
       all_legs << sub_leg
     end
+    
     ## Adds the start point back to the end of the array:
-    # each_stop.push(data['routes'].first['legs'].first['start_address'])
     # Adds a key for each address value denoting the order of the trip:
     each_stop.each_index do |i|
       points_hash[i + 1] = each_stop[i]
