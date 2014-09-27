@@ -115,12 +115,12 @@ class EffErrands::Server < Sinatra::Application
     
 
     ## GEOCODING API FOR THE MAP:
-    address_for_geocoding.each do |x|
-      geo_url = URI.encode('https://maps.googleapis.com/maps/api/geocode/json?address=' + x + '&key=' + ENV['GOOGLE_MAPS_KEY'])
-      response = Unirest.get (geo_url)
-      geo_data = response.body
-      geocodes << geo_data['results'].first['geometry']['location']
-    end
+    # address_for_geocoding.each do |x|
+    #   geo_url = URI.encode('https://maps.googleapis.com/maps/api/geocode/json?address=' + x + '&key=' + ENV['GOOGLE_MAPS_KEY'])
+    #   response = Unirest.get (geo_url)
+    #   geo_data = response.body
+    #   geocodes << geo_data['results'].first['geometry']['location']
+    # end
 
     erb :route, :locals => {start_dest: start_dest, points: points_hash, names: names, directions: all_legs, end_dest: end_dest, mode: mode}
 
@@ -129,5 +129,9 @@ class EffErrands::Server < Sinatra::Application
 
   run! if __FILE__ == $0
 end
+
+
+
+
 
 

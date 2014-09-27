@@ -11,6 +11,10 @@ body, h1, p, h4, button, select {
   opacity: 1;
 }
 
+#map-canvas {
+  height: 100%;
+  width: 100%;
+}
 
 button {
   opacity: .7;
